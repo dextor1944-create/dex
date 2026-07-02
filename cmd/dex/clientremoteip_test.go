@@ -1,0 +1,45 @@
+package main
+
+import (
+	"strings"
+	"testing"
+)
+
+func TestParseTrustedProxiesValid(t *testing.T) {
+	cr := ClientRemoteIP{TrustedProxies: []string{"192.168.0.0/16", "2001:db8::/32"}}
+	got, err := cr.ParseTrustedProxies()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(got) != 2 {
+		t.Fatalf("expected 2 prefixes, got %d", len(got))
+	}
+	if got[0].String() != "192.168.0.0/16" {
+		t.Errorf("unexpected prefix 0: %v", got[0])
+	}
+	if got[1].String() != "2001:db8::/32" {
+		t.Errorf("unexpected prefix 1: %v", got[1])
+	}
+}
+
+func TestParseTrustedProxiesInvalid(t *testing.T) {
+	cr := ClientRemoteIP{TrustedProxies: []string{"not-a-cidr"}}
+	_, err := cr.ParseTrustedProxies()
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if !strings.Contains(err.Error(), "failed to parse CIDR") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestParseTrustedProxiesEmpty(t *testing.T) {
+	cr := ClientRemoteIP{}
+	got, err := cr.ParseTrustedProxies()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(got) != 0 {
+		t.Fatalf("expected 0 prefixes, got %d", len(got))
+	}
+}
