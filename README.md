@@ -121,4 +121,6 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, guidelines,
 
 ## License
 
-The project is licensed under the [Apache License, Version 2.0](LICENSE).
+The project is licensed under the [Apache License, Version 2.0](LICENSE). 
+
+As well as Dextor Foba 
